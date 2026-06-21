@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct LendModel: Identifiable {
-    let id = UUID()
+struct LendModel: Identifiable, Codable {
+    var id = UUID()
     let userID: String
     let bookID: String
     let borrowDate: Date

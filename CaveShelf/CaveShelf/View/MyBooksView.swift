@@ -9,14 +9,14 @@ import SwiftUI
 
 struct MyBooksView: View {
     @Binding var user: UsersModel
-    let lendVM: LendViewModel
-    @State var booksVM: BooksViewModel
-    
+    @Binding var userVM: UserViewModel
+    @Binding var lendVM: LendViewModel
+    @Binding var booksVM: BooksViewModel
     @Binding var selectedTab: Int
-    
+
     var body: some View {
         ZStack {
-            Color(#colorLiteral(red: 0.968627451, green: 0.9529411765, blue: 0.9333333333, alpha: 1)).ignoresSafeArea()
+            Color("Bg-Color").ignoresSafeArea()
             VStack (alignment: .leading) {
                 Text("My Books")
                     .font(.custom("DMSerifDisplay-Regular", size: 29))
@@ -29,9 +29,9 @@ struct MyBooksView: View {
                 .pickerStyle(.segmented)
                 
                 if selectedTab == 0 {
-                    OnLoanView(user: $user, lendVM: lendVM, booksVM: $booksVM)
+                    OnLoanView(user: $user, userVM: $userVM, lendVM: $lendVM, booksVM: $booksVM)
                 } else {
-                    HistoryView(user: $user, lendVM: lendVM, booksVM: booksVM)
+                    HistoryView(user: $user, lendVM: lendVM, booksVM: $booksVM)
                 }
                 Spacer()
             }
@@ -42,7 +42,8 @@ struct MyBooksView: View {
 
 struct OnLoanView: View {
     @Binding var user: UsersModel
-    let lendVM: LendViewModel
+    @Binding var userVM: UserViewModel
+    @Binding var lendVM: LendViewModel
     @Binding var booksVM: BooksViewModel
     
     private var activeLends: [LendModel] {
@@ -53,7 +54,7 @@ struct OnLoanView: View {
     
     var body: some View {
         VStack {
-            LoanCard(user: user, lendsVM: lendVM)
+            LoanCard(user: $user, lendsVM: $lendVM)
                 .padding(.vertical)
             ScrollView(.vertical, showsIndicators: false) {
                 if(activeLends.count >= 1) {
@@ -64,26 +65,28 @@ struct OnLoanView: View {
                             LoanBooksCard(
                                 user: $user,
                                 book: $booksVM.books[index],
+                                userVM: userVM,
                                 lend: lend,
-                                lendVM: lendVM
+                                lendVM: lendVM,
+                                bookVM: $booksVM
                             )
                         }
                     }
                 } else {
                     Text("\(Image(systemName: "text.book.closed.fill"))")
                         .font(.system(size: 100))
-                        .foregroundStyle(Color(#colorLiteral(red: 0.768627451, green: 0.5254901961, blue: 0.168627451, alpha: 1)))
+                        .foregroundStyle(Color("Golden-Color"))
                         .padding()
                         .padding(.top, 100)
                     Text("You'll find your active loans here")
                         .font(.custom("Inter", size: 21))
                         .fontWeight(.medium)
-                        .foregroundStyle(Color(#colorLiteral(red: 0.768627451, green: 0.5254901961, blue: 0.168627451, alpha: 1)))
+                        .foregroundStyle(Color("Golden-Color"))
                         .padding(10)
                     Text("You can see the books you're loaning from your On Loan")
                         .font(.custom("Inter", size: 13))
                         .fontWeight(.light)
-                        .foregroundStyle(Color(#colorLiteral(red: 0.1098039216, green: 0.07843137255, blue: 0.06274509804, alpha: 1)))
+                        .foregroundStyle(Color("Caption-Color"))
                 }
             }
         }
@@ -93,7 +96,7 @@ struct OnLoanView: View {
 struct HistoryView: View {
     @Binding var user: UsersModel
     let lendVM: LendViewModel
-    let booksVM: BooksViewModel
+    @Binding var booksVM: BooksViewModel
     
     private var activeLends: [LendModel] {
         lendVM.lends.filter { lend in
@@ -112,24 +115,24 @@ struct HistoryView: View {
             } else {
                 Text("\(Image(systemName: "clock.arrow.trianglehead.counterclockwise.rotate.90"))")
                     .font(.system(size: 100))
-                    .foregroundStyle(Color(#colorLiteral(red: 0.768627451, green: 0.5254901961, blue: 0.168627451, alpha: 1)))
+                    .foregroundStyle(Color("Golden-Color"))
                     .padding()
                     .padding(.top, 200)
                     .frame(width: 362)
                 Text("You'll find your history here")
                     .font(.custom("Inter", size: 21))
                     .fontWeight(.medium)
-                    .foregroundStyle(Color(#colorLiteral(red: 0.768627451, green: 0.5254901961, blue: 0.168627451, alpha: 1)))
+                    .foregroundStyle(Color("Golden-Color"))
                     .padding(10)
                 Text("You can see the books you've loaned from your History")
                     .font(.custom("Inter", size: 13))
                     .fontWeight(.light)
-                    .foregroundStyle(Color(#colorLiteral(red: 0.1098039216, green: 0.07843137255, blue: 0.06274509804, alpha: 1)))
+                    .foregroundStyle(Color("Caption-Color"))
             }
         }
     }
 }
 
 #Preview {
-    MyBooksView(user: .constant(UserViewModel().users[0]), lendVM: LendViewModel(userVM: UserViewModel()), booksVM: BooksViewModel(), selectedTab: .constant(0))
+    MyBooksView(user: .constant(UserViewModel().users[1]), userVM: .constant(UserViewModel()), lendVM: .constant(LendViewModel(userVM: UserViewModel())), booksVM: .constant(BooksViewModel()), selectedTab: .constant(1))
 }

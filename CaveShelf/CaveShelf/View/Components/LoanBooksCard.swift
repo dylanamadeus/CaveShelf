@@ -10,13 +10,18 @@ import SwiftUI
 struct LoanBooksCard: View {
     @Binding var user: UsersModel
     @Binding var book: BooksModel
+    let userVM: UserViewModel
     let lend: LendModel
     let lendVM: LendViewModel
+    @Binding var bookVM: BooksViewModel
     
+    @State private var showAlert = false
+    @State private var showToast = false
+    @State private var toastMessage = ""
     var body: some View {
         ZStack {
             Rectangle()
-                .fill(Color(#colorLiteral(red: 1, green: 0.9921568627, blue: 0.9764705882, alpha: 1)))
+                .fill(Color("Bg-Card"))
                 .frame(height: 200)
                 .cornerRadius(15)
                 .overlay(
@@ -32,23 +37,30 @@ struct LoanBooksCard: View {
                         .cornerRadius(10)
                         .padding(.trailing, 10)
                     VStack (alignment: .leading) {
-                        Text(book.title)
-                            .font(.custom("Inter", size: 19))
-                            .fontWeight(.bold)
-                        Text(book.author)
-                            .font(.custom("Inter", size: 15))
-                            .fontWeight(.semibold)
-                            .foregroundStyle(Color(#colorLiteral(red: 0.1098039216, green: 0.07843137255, blue: 0.06274509804, alpha: 0.6)))
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            Text(book.title)
+                                .font(.custom("Inter", size: 19))
+                                .fontWeight(.bold)
+                        }
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            Text(book.author)
+                                .font(.custom("Inter", size: 15))
+                                .fontWeight(.semibold)
+                                .foregroundStyle(Color("Caption-Color"))
+                        }
                         
-                        Text("\(Image(systemName: "calendar")) Due \(lend.dueDate.formatted(date: .abbreviated, time: .omitted))")
-                            .font(.custom("Inter", size: 13))
-                            .fontWeight(.medium)
-                            .foregroundStyle(lend.dueDate >= Date() ? Color(#colorLiteral(red: 0.1764705882, green: 0.3137254902, blue: 0.0862745098, alpha: 1)) : Color(#colorLiteral(red: 0.768627451, green: 0.2745098039, blue: 0.168627451, alpha: 1)))
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 5)
-                            .background(lend.dueDate >= Date() ? Color(#colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1)) : Color(#colorLiteral(red: 0.768627451, green: 0.5254901961, blue: 0.168627451, alpha: 0.2)))
-                            .cornerRadius(30)
-                            .padding(.top)
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            Text("\(Image(systemName: "calendar")) Due \(lend.dueDate.formatted(date: .abbreviated, time: .omitted))")
+                                .font(.custom("Inter", size: 13))
+                                .fontWeight(.medium)
+                                .foregroundStyle(lend.dueDate >= Date() ? Color("Ok-Color") : Color("No-Color"))
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 5)
+                                .background(lend.dueDate >= Date() ? Color("Ok-Bg") : Color("No-Bg"))
+                                .cornerRadius(30)
+                                .padding(.top)
+                                .lineLimit(1)
+                        }
                     }
                     Spacer()
                 }
@@ -56,15 +68,15 @@ struct LoanBooksCard: View {
                 .padding(.top)
                 
                 Button {
-                    lendVM.returnBook(
-                        lendID: lend.id,
-                        book: &book,
-                        user: &user)
+                    showAlert = true
+                    
                 } label: {
                     Text("\(Image(systemName: "checkmark.circle.dotted")) Return")
                         .font(.custom("Inter", size: 15))
                         .fontWeight(.medium)
-                        .foregroundStyle(Color(#colorLiteral(red: 0.1764705882, green: 0.3137254902, blue: 0.0862745098, alpha: 1)))
+                        .foregroundStyle(Color("Ok-Color"))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.3)
                         .padding(.horizontal, 120)
                         .padding(.vertical, 10)
                         .glassEffect()
@@ -73,6 +85,27 @@ struct LoanBooksCard: View {
                 .padding(.top, 10)
                 .padding(.horizontal)
                 .padding(.bottom)
+                .alert(isPresented: $showAlert) {
+                    Alert (
+                        title: Text("Return this book"),
+                        message: Text("Are you sure to return this book?"),
+                        primaryButton: .default(
+                            Text("Yes"),
+                            action: {
+                                lendVM.returnBook(
+                                    lendID: lend.id,
+                                    book: book,
+                                    user: &user,
+                                    userVM: userVM,
+                                    booksVM: bookVM
+                                )
+                            }
+                        ),
+                        secondaryButton: .cancel(
+                            Text("Cancel"),
+                        )
+                    )
+                }
             }
         }
     }
@@ -82,8 +115,11 @@ struct LoanBooksCard: View {
     LoanBooksCard(
         user: .constant(UserViewModel().users[0]),
         book: .constant(BooksViewModel().books[0]),
+        userVM: UserViewModel(),
         lend: LendViewModel(userVM: UserViewModel()).lends[2],
-        lendVM: LendViewModel(userVM: UserViewModel()))
+        lendVM: LendViewModel(userVM: UserViewModel()),
+        bookVM: .constant(BooksViewModel())
+    )
     
 //    LoanBooksCard(
 //        user: $user,

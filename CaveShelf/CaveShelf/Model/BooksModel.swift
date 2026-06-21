@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct BooksModel: Identifiable, Hashable {
+struct BooksModel: Identifiable, Hashable, Codable {
     var id: String { title }
     let title: String
     let author: String

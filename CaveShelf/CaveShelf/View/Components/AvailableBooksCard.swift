@@ -26,14 +26,21 @@ struct AvailableBooksCard: View {
                     .cornerRadius(15)
             }
             
-            Text(book.title)
-                .font(.custom("Inter", size: 17))
-                .fontWeight(.semibold)
+                VStack (alignment: .leading) {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        Text(book.title)
+                            .font(.custom("Inter", size: 17))
+                            .fontWeight(.semibold)
+                    }
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        Text(book.author)
+                            .font(.custom("Inter", size: 13))
+                            .fontWeight(.medium)
+                            .foregroundStyle(Color("Caption-Color"))
+                    }
+                }
             
-            Text(book.author)
-                .font(.custom("Inter", size: 13))
-                .fontWeight(.medium)
-                .foregroundStyle(Color(#colorLiteral(red: 0.1098039216, green: 0.07843137255, blue: 0.06274509804, alpha: 0.6)))
+            .frame(width: 165)
         }
     }
 }

@@ -14,7 +14,7 @@ struct HistoryCard: View {
     var body: some View {
         ZStack {
             Rectangle()
-                .fill(Color(#colorLiteral(red: 1, green: 0.9921568627, blue: 0.9764705882, alpha: 1)))
+                .fill(Color("Bg-Card"))
                 .frame(height: 130)
                 .cornerRadius(15)
                 .overlay(
@@ -29,24 +29,30 @@ struct HistoryCard: View {
                     .cornerRadius(10)
                     .padding(.trailing,5)
                 VStack (alignment: .leading) {
-                    Text(book.title)
-                        .font(.custom("Inter", size: 19))
-                        .fontWeight(.bold)
-                    Text(book.author)
-                        .font(.custom("Inter", size: 15))
-                        .fontWeight(.semibold)
-                        .foregroundStyle(Color(#colorLiteral(red: 0.1098039216, green: 0.07843137255, blue: 0.06274509804, alpha: 0.6)))
+                    ScrollView (.horizontal, showsIndicators: false) {
+                        Text(book.title)
+                            .font(.custom("Inter", size: 19))
+                            .fontWeight(.bold)
+                    }
+                    ScrollView (.horizontal, showsIndicators: false) {
+                        Text(book.author)
+                            .font(.custom("Inter", size: 15))
+                            .fontWeight(.semibold)
+                            .foregroundStyle(Color("Caption-Color"))
+                    }
                     
-                    Text("\(Image(systemName: "clock")) Returned \(lend.returnDate?.formatted(date: .abbreviated, time: .omitted) ?? "to us please")")
-                        .font(.custom("Inter", size: 13))
-                        .fontWeight(.medium)
-                        .foregroundStyle(Color(#colorLiteral(red: 0.1098039216, green: 0.07843137255, blue: 0.06274509804, alpha: 0.6)))
-                        .padding(.top)
+                    ScrollView (.horizontal, showsIndicators: false) {
+                        Text("\(Image(systemName: "clock")) Returned \(lend.returnDate?.formatted(date: .abbreviated, time: .omitted) ?? "to us please")")
+                            .font(.custom("Inter", size: 13))
+                            .fontWeight(.medium)
+                            .foregroundStyle(Color("Caption-Color"))
+                            .padding(.top)
+                    }
                 }
                 Spacer()
                 Text("\(Image(systemName: "checkmark.circle.dotted"))")
                     .font(.custom("Inter", size: 30))
-                    .foregroundStyle(Color(#colorLiteral(red: 0.1764705882, green: 0.3137254902, blue: 0.0862745098, alpha: 1)))
+                    .foregroundStyle(Color("Ok-Color"))
                     .padding(.trailing, 10)
             }
             .padding(.horizontal)

@@ -26,9 +26,13 @@ struct MainTabView: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             if let user = loggedInUser {
+                let userBinding = Binding(
+                    get: { user },
+                    set: { loggedInUser = $0 }
+                )
                 Tab("Home", systemImage: "house.fill", value: .home) {
-                    HomeView(user: user, lendVM: lendVM, booksVM: booksVM,
-                             onSeeAll: {
+                    HomeView(user: userBinding, lendVM: $lendVM, booksVM: $booksVM,
+                     onSeeAll: {
                         discoverPath = NavigationPath()
                         selectedTab = .discover
                     }, onProfile:  {
@@ -38,13 +42,11 @@ struct MainTabView: View {
                         loggedInUser = nil
                     })
                 }
-                if let userBinding = Binding($loggedInUser) {
-                    Tab("My Books", systemImage: "books.vertical", value: .myBooks) {
-                        MyBooksView(user: userBinding, lendVM: lendVM, booksVM: booksVM, selectedTab: $myBooksTab)
-                    }
+                Tab("My Books", systemImage: "books.vertical", value: .myBooks) {
+                    MyBooksView(user: userBinding, userVM: $userVM, lendVM: $lendVM, booksVM: $booksVM, selectedTab: $myBooksTab)
                 }
                 Tab("Profile", systemImage: "person.crop.circle", value: .profile) {
-                    ProfileView(user: user, lendVM: lendVM, booksVM: booksVM, onRead: {
+                    ProfileView(user: userBinding, lendVM: lendVM, booksVM: $booksVM, onRead: {
                         myBooksTab = 1
                         discoverPath = NavigationPath()
                         selectedTab = .myBooks
@@ -58,13 +60,13 @@ struct MainTabView: View {
                 }
                 Tab("Search", systemImage: "magnifyingglass", value: .discover, role: .search) {
                     NavigationStack(path: $discoverPath) {
-                        DiscoverView(path: $discoverPath, user: user, lendVM: lendVM, booksVM: booksVM)
+                        DiscoverView(path: $discoverPath, user: userBinding, lendVM: $lendVM, booksVM: $booksVM)
                             .padding(.top, -40)
                     }
                 }
             }
         }
-        .tint(Color(#colorLiteral(red: 0.1764705882, green: 0.3137254902, blue: 0.0862745098, alpha: 1)))
+        .tint(Color("Ok-Color"))
         .navigationBarBackButtonHidden(true)
     }
 }
@@ -75,6 +77,6 @@ struct MainTabView: View {
         userVM: .constant(userVM),
         booksVM: .constant(BooksViewModel()),
         lendVM: .constant(LendViewModel(userVM: userVM)),
-        loggedInUser: .constant(userVM.users[1])
+        loggedInUser: .constant(userVM.users[0])
     )
 }

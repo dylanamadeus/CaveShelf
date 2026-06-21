@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct HomeView: View {
-    let user: UsersModel
-    let lendVM: LendViewModel
-    @State var booksVM: BooksViewModel
+    @Binding var user: UsersModel
+    @Binding var lendVM: LendViewModel
+    @Binding var booksVM: BooksViewModel
     var onSeeAll: () -> Void = {}
     var onProfile: () -> Void = {}
     var onSignOut: () -> Void = {}
@@ -21,7 +21,7 @@ struct HomeView: View {
     var body: some View {
         NavigationStack(path: $path) {
             ZStack {
-                Color(#colorLiteral(red: 0.968627451, green: 0.9529411765, blue: 0.9333333333, alpha: 1)).ignoresSafeArea()
+                Color("Bg-Color").ignoresSafeArea()
                 ScrollView (.vertical, showsIndicators: false) {
                     VStack {
                         HStack {
@@ -34,11 +34,15 @@ struct HomeView: View {
                                     : "Good Evening,"
                                 )
                                     .font(.custom("Inter", size: 15))
-                                    .foregroundStyle(Color(#colorLiteral(red: 0.1098039216, green: 0.07843137255, blue: 0.06274509804, alpha: 0.8)))
+                                    .foregroundStyle(Color("Caption-Color"))
                                     .fontWeight(.medium)
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.5)
                                 Text("\(user.firstName) \(user.lastName)")
                                     .font(.custom("DMSerifDisplay-Regular", size: 29))
                                     .fontWeight(.bold)
+                                    .lineLimit(2)
+                                    .minimumScaleFactor(0.5)
                             }
                             Spacer()
                             
@@ -79,6 +83,8 @@ struct HomeView: View {
                             Text("Available Now")
                                 .font(.custom("DMSerifDisplay-Regular", size: 23))
                                 .fontWeight(.bold)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.2)
                             
                             Spacer()
                             
@@ -88,9 +94,9 @@ struct HomeView: View {
                                 Text("See all")
                                     .font(.custom("Inter", size: 17))
                                     .fontWeight(.semibold)
-                                    .foregroundStyle(Color(#colorLiteral(red: 0.768627451, green: 0.5254901961, blue: 0.168627451, alpha: 1)))
+                                    .foregroundStyle(Color("Golden-Color"))
                                 Image(systemName: "chevron.right")
-                                    .foregroundStyle(Color(#colorLiteral(red: 0.768627451, green: 0.5254901961, blue: 0.168627451, alpha: 1)))
+                                    .foregroundStyle(Color("Golden-Color"))
                                     .font(.system(size: 13))
                             }
                         }
@@ -112,6 +118,8 @@ struct HomeView: View {
                             Text("New Arrivals")
                                 .font(.custom("DMSerifDisplay-Regular", size: 23))
                                 .fontWeight(.bold)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.2)
                             Spacer()
                         }
                         .padding(.top)
@@ -133,8 +141,9 @@ struct HomeView: View {
                 }) {
                     BooksView(
                         book: $booksVM.books[index],
-                        user: user,
-                        lendVM: lendVM
+                        user: $user,
+                        lendVM: $lendVM,
+                        bookVM: $booksVM
                     )
                 }
             }
@@ -143,5 +152,5 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView(user: UserViewModel().users[0], lendVM: LendViewModel(userVM: UserViewModel()), booksVM: BooksViewModel())
+    HomeView(user: .constant(UserViewModel().users[0]), lendVM: .constant(LendViewModel(userVM: UserViewModel())), booksVM: .constant(BooksViewModel()))
 }

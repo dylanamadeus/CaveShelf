@@ -34,15 +34,21 @@ struct RecommendationCard: View {
                         .font(.custom("Inter", size: 15))
                         .fontWeight(.black)
                         .foregroundStyle(.white)
-                        .background(Color(#colorLiteral(red: 0.768627451, green: 0.5254901961, blue: 0.168627451, alpha: 1)))
+                        .background(Color("Golden-Color"))
                         .cornerRadius(30)
-                    Text(book.title)
-                        .font(.custom("DMSerifDisplay-Regular", size: 29))
-                        .fontWeight(.bold)
-                        .foregroundStyle(.white)
-                    Text(book.author)
-                        .font(.custom("Inter", size: 17))
-                        .foregroundStyle(Color(#colorLiteral(red: 0.9294117647, green: 0.9098039216, blue: 0.8784313725, alpha: 1)))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        Text(book.title)
+                            .font(.custom("DMSerifDisplay-Regular", size: 29))
+                            .fontWeight(.bold)
+                            .foregroundStyle(.white)
+                    }
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        Text(book.author)
+                            .font(.custom("Inter", size: 17))
+                            .foregroundStyle(Color(#colorLiteral(red: 0.9294117647, green: 0.9098039216, blue: 0.8784313725, alpha: 1)))
+                    }
                 }
                 .padding()
                 .frame(height: 200)

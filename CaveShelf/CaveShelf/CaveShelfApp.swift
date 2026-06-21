@@ -11,8 +11,8 @@ import SwiftUI
 struct CaveShelfApp: App {
     var body: some Scene {
         WindowGroup {
-            LoginView()
-                .preferredColorScheme(.light)
+//            LoginView()
+            SplashScreen()
         }
     }
 }

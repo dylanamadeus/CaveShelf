@@ -9,9 +9,10 @@ import SwiftUI
 
 struct DiscoverView: View {
     @Binding var path: NavigationPath
-    let user: UsersModel
-    let lendVM: LendViewModel
-    @State var booksVM: BooksViewModel
+//    let user: UsersModel
+    @Binding var user: UsersModel
+    @Binding var lendVM: LendViewModel
+    @Binding var booksVM: BooksViewModel
     @State private var searchText = ""
     
     private var filteredBooks: [BooksModel] {
@@ -27,7 +28,7 @@ struct DiscoverView: View {
     
     var body: some View {
         ZStack {
-            Color(#colorLiteral(red: 0.968627451, green: 0.9529411765, blue: 0.9333333333, alpha: 1)).ignoresSafeArea()
+            Color("Bg-Color").ignoresSafeArea()
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading) {
                     HStack {
@@ -40,7 +41,7 @@ struct DiscoverView: View {
                     Text("\(filteredBooks.count) " + (filteredBooks.count == 1 ? "book found" : "books found"))
                         .font(.custom("Inter", size: 15))
                         .fontWeight(.medium)
-                        .foregroundStyle(Color(#colorLiteral(red: 0.1098039216, green: 0.07843137255, blue: 0.06274509804, alpha: 0.6)))
+                        .foregroundStyle(Color("Caption-Color"))
                         .padding(.top, 5)
                     
                     ForEach(filteredBooks) { book in
@@ -59,8 +60,9 @@ struct DiscoverView: View {
                 }) {
                     BooksView(
                         book: $booksVM.books[index],
-                        user: user,
-                        lendVM: lendVM
+                        user: $user,
+                        lendVM: $lendVM,
+                        bookVM: $booksVM
                     )
                 }
             }
@@ -70,5 +72,5 @@ struct DiscoverView: View {
 }
 
 #Preview {
-    DiscoverView(path: .constant(NavigationPath()), user: UserViewModel().users[0], lendVM: LendViewModel(userVM: UserViewModel()), booksVM: BooksViewModel())
+    DiscoverView(path: .constant(NavigationPath()), user: .constant(UserViewModel().users[0]), lendVM: .constant(LendViewModel(userVM: UserViewModel())), booksVM: .constant(BooksViewModel()))
 }

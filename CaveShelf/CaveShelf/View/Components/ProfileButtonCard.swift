@@ -16,8 +16,8 @@ struct ProfileButtonCard: View {
     var body: some View {
         ZStack {
             Rectangle()
-                .fill(Color(#colorLiteral(red: 1, green: 0.9921568627, blue: 0.9764705882, alpha: 1)))
-                .frame(height: 100)
+                .fill(Color("Bg-Card"))
+                .frame(height: 80)
                 .cornerRadius(15)
                 .overlay(
                     RoundedRectangle(cornerRadius: 15)
@@ -27,30 +27,33 @@ struct ProfileButtonCard: View {
             HStack {
                 ZStack {
                     Rectangle()
-                        .fill(Color(#colorLiteral(red: 0.1098039216, green: 0.07843137255, blue: 0.06274509804, alpha: 0.1003993247)))
-                        .frame(width: 60, height: 60)
-                        .cornerRadius(25)
+                        .fill(Color("Icon-Card"))
+                        .frame(width: 50, height: 50)
+                        .cornerRadius(20)
                     Text("\(Image(systemName: Icon))")
-                        .font(.custom("Inter", size: 23))
-                        .fontWeight(.bold)
+                        .font(.custom("Inter", size: 21))
                 }
                 .padding(.trailing)
                 
                 VStack (alignment: .leading){
                     Text(Title)
-                        .font(.custom("Inter", size: 21))
-                        .fontWeight(.bold)
-                    Text("\(Info)" + " " + Subtitle)
                         .font(.custom("Inter", size: 17))
+                        .fontWeight(.bold)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.5)
+                    Text("\(Info)" + " " + Subtitle)
+                        .font(.custom("Inter", size: 13))
                         .fontWeight(.semibold)
-                        .foregroundStyle(Color(#colorLiteral(red: 0.1098039216, green: 0.07843137255, blue: 0.06274509804, alpha: 0.6)))
+                        .foregroundStyle(Color("Caption-Color"))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.5)
                 }
                 
                 Spacer()
                 
                 Text("\(Image(systemName: "chevron.right"))")
                     .font(.custom("Inter", size: 17))
-                    .foregroundStyle(Color(#colorLiteral(red: 0.1098039216, green: 0.07843137255, blue: 0.06274509804, alpha: 0.6)))
+                    .foregroundStyle(Color("Caption-Color"))
                     .padding(.trailing)
             }
             .padding(.horizontal)

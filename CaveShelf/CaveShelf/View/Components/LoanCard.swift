@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct LoanCard: View {
-    let user: UsersModel
-    let lendsVM: LendViewModel
+    @Binding var user: UsersModel
+    @Binding var lendsVM: LendViewModel
     
     var body: some View {
         ZStack {
             Rectangle()
-                .fill(Color(#colorLiteral(red: 1, green: 0.9921568627, blue: 0.9764705882, alpha: 1)))
+                .fill(Color("Bg-Card"))
                 .frame(height: 100)
                 .cornerRadius(15)
                 .overlay(
@@ -26,12 +26,16 @@ struct LoanCard: View {
                     Text("\(lendsVM.userLoan(for: user))")
                         .font(.custom("Inter", size: 25))
                         .fontWeight(.bold)
-                        .foregroundStyle(Color(#colorLiteral(red: 0.768627451, green: 0.5254901961, blue: 0.168627451, alpha: 1)))
+                        .foregroundStyle(Color("Golden-Color"))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.3)
                     
                     Text("Active Loans")
                         .font(.custom("Inter", size: 13))
                         .fontWeight(.semibold)
-                        .foregroundStyle(Color(#colorLiteral(red: 0.1098039216, green: 0.07843137255, blue: 0.06274509804, alpha: 0.6)))
+                        .foregroundStyle(Color("Caption-Color"))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.3)
                 }
                 .frame(width: 100)
                 Spacer()
@@ -40,15 +44,19 @@ struct LoanCard: View {
                     .overlay(.gray)
                 Spacer()
                 VStack {
-                    Text("3")
+                    Text("\(user.maxLoan)")
                         .font(.custom("Inter", size: 25))
                         .fontWeight(.bold)
-                        .foregroundStyle(Color(#colorLiteral(red: 0.1764705882, green: 0.3137254902, blue: 0.0862745098, alpha: 1)))
+                        .foregroundStyle(Color("Ok-Color"))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.3)
                     
                     Text("Max Allowed")
                         .font(.custom("Inter", size: 13))
                         .fontWeight(.semibold)
-                        .foregroundStyle(Color(#colorLiteral(red: 0.1098039216, green: 0.07843137255, blue: 0.06274509804, alpha: 0.6)))
+                        .foregroundStyle(Color("Caption-Color"))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.3)
                 }
                 .frame(width: 100)
                 Spacer()
@@ -60,12 +68,16 @@ struct LoanCard: View {
                     Text("\(lendsVM.overdueLoan(for: user))")
                         .font(.custom("Inter", size: 25))
                         .fontWeight(.bold)
-                        .foregroundStyle(Color(#colorLiteral(red: 0.768627451, green: 0.2745098039, blue: 0.168627451, alpha: 1)))
+                        .foregroundStyle(Color("No-Color"))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.3)
                     
                     Text("Overdue")
                         .font(.custom("Inter", size: 13))
                         .fontWeight(.semibold)
-                        .foregroundStyle(Color(#colorLiteral(red: 0.1098039216, green: 0.07843137255, blue: 0.06274509804, alpha: 0.6)))
+                        .foregroundStyle(Color("Caption-Color"))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.3)
                 }
                 .frame(width: 100)
             }
@@ -77,5 +89,5 @@ struct LoanCard: View {
 #Preview {
     let userVM = UserViewModel()
     let lendVM = LendViewModel(userVM: userVM)
-    LoanCard(user: userVM.users[0], lendsVM: lendVM)
+    LoanCard(user: .constant(userVM.users[0]), lendsVM: .constant(lendVM))
 }
